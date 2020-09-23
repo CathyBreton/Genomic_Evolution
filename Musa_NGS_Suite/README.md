@@ -25,12 +25,9 @@ The tools are developed in Perl, bash, Python3, Java and work on the Linux syste
 | FastQC        | https://www.bioinformatics.babraham.ac.uk/projects/fastqc/      | FastQC/0.11.7 |
 | GATK V4       | https://software.broadinstitute.org/gatk/                       | GenomeAnalysisTK/4.0.5.2 |
 | GATK V3       | https://software.broadinstitute.org/gatk/                       | GenomeAnalysisTK/3.7-0   |
-| java          | https://www.java.com/fr/                                        | java/jre8  |
 | Picard Tools  | https://broadinstitute.github.io/picard/                        | picard-tools/2.7.0   |
 | sambamba      | https://lomereiter.github.io/sambamba/                          | sambamba/0.6.6 |
 | Samtools      | https://github.com/samtools/samtools                            | samtools/1.2  |
-| Python2       | https://www.python.org/downloads/release/python-2718/           | Python 2.7.18 |
-| Python3       | https://www.python.org/about/                                   | Python 3.8.3 |
 | STAR          | https://github.com/alexdobin/STAR                               | STAR/2.5.0b |
 | VCFHunter     | https://github.com/SouthGreenPlatform/VcfHunter                 |  |
 | Vcftools      | https://vcftools.github.io/index.html                           | vcftools/0.1.14  |
