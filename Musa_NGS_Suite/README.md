@@ -437,23 +437,15 @@ _Cov.png is a figure showing read coverage along chromosomes (see figure below f
 _Ratio.png: is a figure showing grouped allele read ratio along chromosomes (see figure below for interpretation).
 
 
-This program perform two things based on a vcf. 1) It plots for an accession, the allele coverage along its chromosomes. 2) It identify, based on known ancestral accessions in the vcf, the alleles specific to each groups and plot the alleles proportion at a site in the accession along chromosomes.
+This program perform two things based on a vcf. 1) It plots for an accession, the allele coverage along its chromosomes. 2) It identify, based on known ancestral accessions in the vcf, the alleles specific to each group and plot the alleles proportion at a site in the accession along chromosomes.
 
 ## Authors and acknowledgments
 
-This work is a collaborative work between Catherine Breton, Yann Huber, Mathieu Rouard with the participation, and the use of CIRAD scripts of Guillaume Martin. 
+This work is a collaborative work between Catherine Breton, Yann Huber, Mathieu Rouard with the participation, and the use of scripts from Guillaume Martin (CIRAD) who develops and maintains VCFHunter.
 
 ## Contact
 
-**Catherine Breton**,
-**PhD Genomic and Evolution, Master Bio-informatic**
-Next Generation Data Scientist Analyst | Bioinformatic Genomic Evolution
-
-Alliance of Bioversity International and CIAT
-Europe – Montpellier Office
-Bioversity International France  |  Parc Scientifique Agropolis II  |  34397 Montpellier Cedex 5  |  France
-
-Email : c.breton@cgiar.org 
+**Catherine Breton**, Alliance of Bioversity International and CIAT Europe (c.breton@cgiar.org)
 
 The Alliance of Bioversity International and the International Center for Tropical Agriculture (CIAT)
 delivers research-based solutions that harness agricultural biodiversity and sustainably transform
