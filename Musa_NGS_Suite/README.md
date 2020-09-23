@@ -7,8 +7,9 @@ Purpose of Musa_NGS_Suite
 --------------------------
 
 <div align="justify">
-Musa NGS Suite, is a collection of script used in different project of Bioversity-France (https://www.bioversityinternational.org/) related to the Musa diversity evolution. It represents the different step of the NGS (Next generation Sequencing) analysis, from the cleaning step to the evolution analysis. This procedure is used in Elan et al, 2020 (https://acsess.onlinelibrary.wiley.com/doi/pdf/10.1002/csc2.20320).</p>
-<p> This tools is composed by two parts, first is common to numerous tools, and the second is more specific and is explained in : A protocol for detection of large chromosome variations in banana using Next Generation Sequencing. Breton Catherine, Cenci Alberto, Sardos Julie, Chase Rachel, Ruas Max, Rouard Mathieu & Roux Nicolas Published in October.
+Musa NGS Suite, is a collection of scripts that are used in different projects to analyse banana genomes using NGS datasets. 
+This suite comprises two main parts. The first part starts from the cleaning of reads to SNP calling. This procedure applied in Elan et al, crop science 2020.
+The second part adds additional steps to study the structure of chromosomes that we applied for the detection of large insertion and deletions to check the genetic integrity of banana samples maintained in collection
 </div>
 
 
