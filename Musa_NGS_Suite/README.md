@@ -59,7 +59,7 @@ The tools are developed in Perl, bash, Python3, Java and work on the Linux syste
   - Filter SNP dataset
   - Split VCF by chromosome
   - Generate molecular karyotype
-- [**Authors and acknowledgment**](#authors-and-acknowledgment) 
+- [**Authors and acknowledgments**](#authors-and-acknowledgment) 
 - [**Contact**](#contact) 
 
 </details>
@@ -68,9 +68,12 @@ The tools are developed in Perl, bash, Python3, Java and work on the Linux syste
 How to cite
 -----------
 <div align="justify">
-Filling the gaps in gene banks: Collecting, characterizing and phenotyping wild banana relatives of Papua new guinea
-David Eyland, Catherine Breton, Julie Sardos, Simon Kallow, Bart Panis, Rony Swennen, Janet Paofa, François Tardieu, Claude Welcker
-Steven B. Janssens, Sebastien C. Carpentier. *Crop Science* https://acsess.onlinelibrary.wiley.com/doi/pdf/10.1002/csc2.20320
+Filling the gaps in gene banks: Collecting, characterizing and phenotyping wild banana relatives of Papua new guinea David Eyland, Catherine Breton, Julie Sardos, Simon Kallow, Bart Panis, Rony Swennen, Janet Paofa, François Tardieu, Claude Welcker Steven B. Janssens, Sebastien C. Carpentier. *Crop Science* https://doi.org/10.1002/csc2.20320  
+</div>
+
+<div align="justify">
+If you use the second workflow.
+A protocol for detection of large chromosome variations in banana using Next Generation Sequencing. Breton Catherine, Cenci Alberto, Sardos Julie, Chase Rachel, Ruas Max, Rouard Mathieu & Roux Nicolas Published in October. Under review.
 </div>
 
 ## Introduction
