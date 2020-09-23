@@ -1,4 +1,5 @@
-![Screenshot](Musa_NGS_Suite.png)
+![Logo](Musa_NGS_Suite.png)
+![](/images/Process_RNAseq.png)
 
 
 # *Musa_NGS_Suite*
