@@ -144,7 +144,7 @@ Ref image :
 ## Workflow - Quality control, cleaning, mapping, SNPCalling
 
 <div align="justify">
-The preprocessing pipeline presented in Figure 1 shows the different steps that are compatible with four different sequencing technologies as listed in the previous section. The pipeline has to be done sample per sample according to the best practice of the software GATK used for the SNP calling part.
+The preprocessing pipeline presented in Figure 1 shows the different steps that are compatible with four different sequencing technologies as listed in the previous section. The pipeline has to be done sample per sample according to the best practice of the software GATK used for the SNP calling part. 
 </div>
 
 ![workflow](github.png)
@@ -153,7 +153,7 @@ The preprocessing pipeline presented in Figure 1 shows the different steps that 
 Description
 -----------
 
-The package provided comprised 8 programs listed here:
+The package provided comprised 4 programs listed here:
 
 
 - Script Dart GBS Rad seq
@@ -167,7 +167,7 @@ The package provided comprised 8 programs listed here:
 ### Input raw data
 
 <div align="justify">
-All those type of markers have the same type of raw data, fastq files, that is a reads sequence fasta associated to the quality coded according the Sequencing compagny used. Two types of data are used in this pipeline, single end or paired end sequence. In single-end reading, the sequencer reads a fragment from only one end to the other, generating the sequence of base pairs. In paired-end reading it starts at one read, finishes this direction at the specified read length, and then starts another round of reading from the opposite end of the fragment.
+All those types of markers have the same type of raw data, fastq files, that is a reads sequence fasta associated to the quality coded according the sequencing company used. Two types of data are used in this pipeline, single end or paired end sequence. In single-end reading, the sequencer reads a fragment from only one end to the other, generating the sequence of base pairs. In paired-end reading it starts at one read, finishes this direction at the specified read length, and then starts another round of reading from the opposite end of the fragment.
 </div>
 
 ### Read Quality check
