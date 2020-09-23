@@ -455,4 +455,4 @@ https://www.ciat.cgiar.org
 
 
 
-![Alliance](Alliance_logo_wide2.jpg)
+![Alliance](images/Alliance_logo_wide2.jpg)
