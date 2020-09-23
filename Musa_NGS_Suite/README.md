@@ -1,4 +1,4 @@
-![Logo](Musa_NGS_Suite.png)
+![Logo](/images/Musa_NGS_Suite.png)
 ![](/images/Process_RNAseq.png)
 
 
