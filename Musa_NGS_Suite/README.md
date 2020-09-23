@@ -194,7 +194,7 @@ The tool generates a trimmed fastq file (*_cutadapt.fastq.gz) files for each acc
 
 In the paired-end data generated, it is possible to verify if both reads are present in the two fastqc files. This step is optional because mapper software BWA or STAR do not accept if read 1 and 2 are not present. This is done with the perl script compare_fastq_paired_v5.pl.
 
-## **Step a :  Mapping reads on the reference**
+## **Step a: Mapping reads on the reference**
 
 **Description**: Align reads on a reference genome (e.g. Musa acuminata ‘DH Pahang’), with BWA [21] for DNA, and STAR [22] for RNA.
 
@@ -208,7 +208,7 @@ Website: http://bio-bwa.sourceforge.net/
 
 **RNA Data**: Mapping with STAR in 2-pass mode
 
-**Description** : In the 2-pass mapping job, STAR will map the reads twice. In the 1st pass, the novel junctions will be detected and inserted into the genome indices. In the 2nd pass, all reads will be re-mapped using annotated (from the GTF file) and novel (detected in the 1st pass) junctions. While this procedure doubles the run-time, it significantly increases sensitivity to novel splice junctions. In the absence of annotations, this option is strongly recommended.
+**Description**: In the 2-pass mapping job, STAR will map the reads twice. In the 1st pass, the novel junctions will be detected and inserted into the genome indices. In the 2nd pass, all reads will be re-mapped using annotated (from the GTF file) and novel (detected in the 1st pass) junctions. While this procedure doubles the run-time, it significantly increases sensitivity to novel splice junctions. In the absence of annotations, this option is strongly recommended.
 
 The tool generates a folder for each accession, (names filled in column 3 "genome_name") filled in the configuration file, which contained the SAM files of aligned reads and a .final.out file of mapping statistics for each library. In addition, a (--prefix) folder containing a mapping statistics file (--prefix + mapping.tab) for all accession is generated.
 
@@ -295,7 +295,7 @@ Fixed Parameters:
 
 ## Workflow - Molecular karyotype analysis
 
-SNP variants can be assigned to the ancestral genomes in order to plot the genome allele coverage ratio. The method has been developed within the VCFHunter software VCFHunter, https://github.com/SouthGreenPlatform/VcfHunter  and can be used with the following procedure.
+SNP variants can be assigned to the ancestral genomes in order to plot the genome allele coverage ratio. The method has been developed within the VCFHunter software, https://github.com/SouthGreenPlatform/VcfHunter and can be used with the following procedure
 
 
 ![workflow](github2.png)
