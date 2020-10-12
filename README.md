@@ -146,7 +146,7 @@ Ref image :
 The preprocessing pipeline presented in Figure 1 shows the different steps that are compatible with four different sequencing technologies as listed in the previous section. The pipeline has to be done sample per sample according to the best practice of the software GATK used for the SNP calling part. 
 </div>
 
-![workflow](images/github.png)
+![workflow](images/Workflow_Step1.png)
 
 
 Description
@@ -297,7 +297,7 @@ Fixed Parameters:
 SNP variants can be assigned to the ancestral genomes in order to plot the genome allele coverage ratio. The method has been developed within the VCFHunter software, https://github.com/SouthGreenPlatform/VcfHunter and can be used with the following procedure
 
 
-![workflow](images/github2.png)
+![workflow](images/Workflow_Step2.png)
 
 
 Description
