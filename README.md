@@ -22,7 +22,7 @@ The tools are developed in Perl, bash, Python3, Java and work on the Linux syste
 | BWA           | http://bio-bwa.sourceforge.net                                  | bwa/0.7.12 |
 | Cutadapt      | https://cutadapt.readthedocs.io/en/stable/                      | cutadapt/2.10  |
 | FastQC        | https://www.bioinformatics.babraham.ac.uk/projects/fastqc/      | FastQC/0.11.7 |
-| GATK V4       | https://software.broadinstitute.org/gatk/                       | GenomeAnalysisTK/4.0.5.2 |
+| GATK V4       | https://software.broadinstitute.org/gatk/                       | GenomeAnalysisTK/4.1.9.0 |
 | GATK V3       | https://software.broadinstitute.org/gatk/                       | GenomeAnalysisTK/3.7-0   |
 | Picard Tools  | https://broadinstitute.github.io/picard/                        | picard-tools/2.7.0   |
 | sambamba      | https://lomereiter.github.io/sambamba/                          | sambamba/0.6.6 |
