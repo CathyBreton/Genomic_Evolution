@@ -58,7 +58,7 @@ my %gatk_version = (
     '3.4' => "/usr/local/bioinfo/GenomeAnalysisTK/3.4-46",
     '3.7' => "/usr/local/bioinfo/GenomeAnalysisTK/3.7-0",
     '4.0' => "/usr/local/bioinfo/GenomeAnalysisTK/4.0.5.2",
-    '4.1' => "/usr/local/bioinfo/GenomeAnalysisTK/4.1.4.0"
+    '4.1' => "/usr/local/bioinfo/GenomeAnalysisTK/4.1.9.0"
 );
 
 
