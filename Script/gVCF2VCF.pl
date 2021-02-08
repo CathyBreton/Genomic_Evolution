@@ -22,7 +22,7 @@ qsub perl gVCF2VCF.pl -r <reference fasta file assembly> -p <file prefix> -v <ve
 =head1 REQUIRES
 
 Perl5
-module load bioinfo/GATK/4.1.4.0
+module load bioinfo/GATK/4.1.9.0
 module load bioinfo/picard-tools/1.130
 module load bioinfo/samtools/1.9
 module load bioinfo/tabix/0.2.6
