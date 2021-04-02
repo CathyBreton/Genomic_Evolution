@@ -166,21 +166,18 @@ The modèle of submission depends on Sun  Grid  Engine  supports. In order to pa
 
 
 ```
-Usage : 
-
-Usage: perl <Script-Name> -g genome_dir_path -r reference_fasta -x extension_file_to_treat -cu cultivar" 
+Usage : perl <Script-Name> -r reference_fasta -x extension_file_to_treat -cu cultivar" 
 ```
 
 ```
 Parameters : 
-
--g genome_dir_path 
+ 
 -r reference_fasta 
 -x extension_file_to_treat 
 -cu cultivar
-
 ```
 
+Furtur developpmnent, in order to adapt the script job submission to Slurm (Simple Linux Utility for Resource Management) model, new script will be added to the package. 
 
  
 ### Input raw data
