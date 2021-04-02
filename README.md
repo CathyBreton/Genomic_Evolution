@@ -162,6 +162,16 @@ The package provided comprised 4 programs listed here:
  - Script RNA seq
    - RNA_seq_paired_end_fastq_to_Vcf_gvcf_jobarray_Total_GATK4.pl
    - RNA_seq_single_end_fastq_to_Vcf_gvcf_jobarray_Total_GATK4.pl 
+
+```
+Usage : 
+```
+
+```
+Parameters : 
+```
+
+
  
 ### Input raw data
 
