@@ -31,7 +31,7 @@ my $samtools_path = "/usr/local/bioinfo/samtools/1.2/bin";
 #
 #  Script Name : CombineVcf.pl
 #
-#  Usage : perl CombineVcf.pl -p <output_prefix> -x <extension gvcf> -x <extension_file_to_treat>
+#  Usage : perl CombineVcf.pl -p <output_prefix> -p <output_prefix> -x <extension_file_to_treat>
 #  
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
