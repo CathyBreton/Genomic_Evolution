@@ -31,7 +31,8 @@ The tools are developed in Perl, bash, Python3, Java and work on the Linux syste
 | VCFHunter     | https://github.com/SouthGreenPlatform/VcfHunter                 |  |
 | Vcftools      | https://vcftools.github.io/index.html                           | vcftools/0.1.14  |
 
-
+For the installation of the differents software, in is under construction.
+Be carefull, those pipeline are part of a cluster architecture, so change the path of the software inside the scipt, this is a futur improvement of the pipeline. 
 
 <details>
 <summary>Table of content</summary>
