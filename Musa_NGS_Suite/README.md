@@ -31,6 +31,12 @@ The tools are developed in Perl, bash, Python3, Java and work on the Linux syste
 | VCFHunter     | https://github.com/SouthGreenPlatform/VcfHunter                 |  |
 | Vcftools      | https://vcftools.github.io/index.html                           | vcftools/0.1.14  |
 
+Dependencies Installation
+-------------------------
+The tools can be installed in a cluster HPC, but can also be installed on your own computer.
+Usually, use a linux systeme, and install in a folder dedicated to software.
+
+Working in Progress......
 
 
 <details>
