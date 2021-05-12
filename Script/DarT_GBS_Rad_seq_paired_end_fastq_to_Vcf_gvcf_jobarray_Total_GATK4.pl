@@ -154,16 +154,14 @@ my $index_bam = "$samtools_path/samtools index $filenm_root.RG.sorted.bam";
 print ("Indexing on bam file $filenm_root.RG.sorted.bam...\n");
 system("$index_bam");
 
-#SplitNCigarReads with GATK4 ######## add -U ALLOW_N_CIGAR_READS in case... becarefull not in GATK4
-####my $split_and_trim = "$gatk_path/gatk --java-options -Xmx4G SplitNCigarReads -R $reference -I $filenm_root.RG.sorted.bam -rf ReassignOneMappingQuality -RMQF 255 -RMQT 60 -U ALLOW_N_CIGAR_READS -O $filenm_root.Split.bam";
-####print ("Split N CigarReads on file $filenm_root.RG.sorted.bam...\n");
-####system("$split_and_trim");
+
 
 
 #=================================================================================================================================
 
 ##### Indel Realignement, 
-# This step is not present in GATK4, not necessary to do for SNP calling but for Indel , need to do so this step is done with GATK3
+# This step is not present in GATK4, not necessary to do for SNP calling but for Indel , need to do so this step is done with GATK3.
+# As this option doesn't exist in GATK4, it is necessary to have the GATK3 installed to use it.
 
 
 #RealignerTargetCreator ######Add --fix_misencoded_quality_scores option if needed --fix_misencoded_quality_scores 
@@ -191,12 +189,6 @@ system("$indelrealigner");
 my $haplotype_caller = "$gatk_path/gatk --java-options -Xmx1G HaplotypeCaller -R $reference -I $filenm_root.indelrealigned.RG.sorted.bam -ploidy 2 -O $filenm_root.indelrealigned.RG.sorted.HC.vcf";
 print ("Call SNPs with HaplotypeCaller on file $filenm_root.indelrealigned.RG.sorted.bam...\n");
 system("$haplotype_caller");
-
-
-###Obtain a gVCF with HaplotypeCaller
-####my $haplotype_caller_gvcf = "$gatk_path/gatk --java-options -Xmx4G HaplotypeCaller -R $reference -I $filenm_root.indelrealigned.RG.sorted.bam --emitRefConfidence GVCF --variant_index_type LINEAR --variant_index_parameter 128000 -O $filenm_root.indelrealigned.RG.sorted.HC.gvcf";
-#####print ("Call SNPs with HaplotypeCaller on file $filenm_root.indelrealigned.RG.sorted.bam and output a gvcf (--emitRefConfidence GVCF)...\n");
-#####system("$haplotype_caller_gvcf");
 
 #VariantAnnotator (add annotation: MappingQualityZero)
 my $variant_annotation_First = "$gatk_path/gatk --java-options -Xmx1G VariantAnnotator -R $reference -V $filenm_root.indelrealigned.RG.sorted.HC.vcf -I $filenm_root.indelrealigned.RG.sorted.bam -A MappingQualityZero -O $filenm_root.indelrealigned.RG.sorted.HC.ann.vcf";
@@ -230,6 +222,8 @@ system("$apply_recalibration");
 #=================================================================================================================================
 
 
+
+
 ##### Second HaplotypeCaller on recalibrated Bam.
 #HaplotypeCaller GATK4 
 #Obtain a gVCF with HaplotypeCaller
@@ -238,27 +232,6 @@ print ("Call SNPs with HaplotypeCaller on file $filenm_root.indelrealigned.RG.so
 system("$haplotype_caller_gvcf");
 
 
-#========================
-#VariantAnnotator GATK4 BETA (add annotation: MappingQualityZero)
-my $variant_annotation_gvf = "$gatk_path/gatk --java-options -Xmx4G VariantAnnotator -R $reference -V $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.gvcf -I $filenm_root.indelrealigned.RG.sorted.recalibrated.bam -A MappingQualityZero -O $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.ann.gvcf";
-print ("Adding MappingQualityZero annotation in file $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.vcf...\n");
-system("$variant_annotation_gvf");
-
-#VariantAnnotator GATK3 (add annotation: MappingQualityZero)
-#my $variant_annotation = "$java_path/java -Xmx4g -jar $gatk3_path/GenomeAnalysisTK.jar -T VariantAnnotator -R $reference -V $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.gvcf -I $filenm_root.indelrealigned.RG.sorted.recalibrated.bam -A MappingQualityZero -o $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.ann.gvcf";
-#print ("Adding MappingQualityZero annotation in file $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.gvcf...\n");
-#system("$variant_annotation");
-#========================
-
-#VariantFiltration (Filter SNPs before applying BaseRecalibrator)
-my $variant_filtration_gvcf  = "$gatk_path/gatk --java-options -Xmx4G VariantFiltration -R $reference -V $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.ann.gvcf --cluster-size 3 --cluster-window-size 10 --filter-expression 'MQ0 >= 4 && ((MQ0 / (1.0 * DP)) > 0.1)' --filter-expression 'QD < 1.5' --filter-expression 'DP < 15' --mask-extension 0 --filter-name HARD_TO_VALIDATE --filter-name QD_FILTER --filter-name DP_FILTER --mask-name Mask -O $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.ann.VF.gvcf";
-print ("Variant filtration --filter-expression 'MQ0 >= 4 && ((MQ0 / (1.0 * DP)) > 0.1)' --filter-expression 'QD < 1.5' --filter-expression 'DP < 15' on $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.ann.gvcf...\n");
-system("$variant_filtration_gvcf");
-
-#SelectVariant to filter out filtered variants
-my $select_variant_gvcf = "$gatk_path/gatk --java-options -Xmx4G SelectVariants -R $reference -V $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.ann.VF.gvcf -select 'vc.isNotFiltered()' -select-type SNP -O $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.ann.VF.filtered.gvcf";
-print ("Filter out filtered SNPs with SelectVariants -select 'vc.isNotFiltered()' -selectType SNP on file $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.ann.VF.gvcf...\n");
-system("$select_variant_gvcf");
 
 #=================================================================================================================================
 
