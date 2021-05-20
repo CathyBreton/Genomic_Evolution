@@ -34,6 +34,12 @@ The tools are developed in Perl, bash, Python3, Java and work on the Linux syste
 For the installation of the differents software, in is under construction.
 Be carefull, those pipeline are part of a cluster architecture, so change the path of the software inside the scipt, this is a futur improvement of the pipeline. 
 
+
+Sun Grid Engine (SGE) and SLURM job scheduler concepts are quite similar.
+All the script are developped to use them in SGE systeme HPC. 
+In order to adapt those script to SLURM , on script is added, but no finis.
+
+
 <details>
 <summary>Table of content</summary>
 
