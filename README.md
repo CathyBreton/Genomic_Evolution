@@ -37,7 +37,7 @@ Be carefull, those pipeline are part of a cluster architecture, so change the pa
 
 Sun Grid Engine (SGE) and SLURM job scheduler concepts are quite similar.
 All the script are developped to use them in SGE systeme HPC. 
-In order to adapt those script to SLURM , on script is added, but no finis.
+In order to adapt those script to SLURM , one script is added, but not finish in the SLURM folder.
 
 
 <details>
