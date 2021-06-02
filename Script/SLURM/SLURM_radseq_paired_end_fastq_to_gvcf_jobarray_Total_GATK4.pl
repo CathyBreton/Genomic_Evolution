@@ -170,9 +170,9 @@ else
 
 
 
-print "#----------------------------------------------------------------#\n";
+print "#------------------------------------------------------------------------------------#\n";
 print "Check homogenieity of fastq files forward and reverse : fastp OK  avec singularity    \n";
-print "#----------------------------------------------------------------#\n";
+print "#------------------------------------------------------------------------------------#\n";
 
 
 if (!-e "$directory/$forward_without_ext.fastp.fastq.gz" && "$directory/$reverse_without_ext.fastp.fastq.gz")
@@ -198,9 +198,9 @@ else
 }
 
 
-print "#----------------------------------------------------------------#\n";
+print "#--------------------------------------------------------------------------#\n";
 print "Check homogenieity of fastq files forward and reverse : fastqc  ok module   \n";
-print "#----------------------------------------------------------------#\n";
+print "#--------------------------------------------------------------------------#\n";
 
 if (!-e "$directory/$forward_without_ext.cutadapt.fastq" && "$directory/$reverse_without_ext.cutadapt.fastq")
 {
@@ -223,9 +223,9 @@ else
 
 
 
-print "#---------------------------------------------------#\n";
+print "#----------------------------------------------------------------------#\n";
 print "bwa mapping on the reference choosen in argument -r Ok with singularity \n";
-print "#---------------------------------------------------#\n";
+print "#----------------------------------------------------------------------#\n";
 
 # bwa mapping on the reference choosen in argument -r
 
@@ -253,9 +253,9 @@ else
 #system("$bwa_mapping");
 
 
-print "#---------------------------------------------------------#\n";
+print "#---------------------------------------------------------------------#\n";
 print "Add read group, and sort bam , with the tools picardtools ok java jar  \n";
-print "#---------------------------------------------------------#\n";
+print "#---------------------------------------------------------------------#\n";
 
 
 #Add read group, and sort bam , with the tools picardtools
