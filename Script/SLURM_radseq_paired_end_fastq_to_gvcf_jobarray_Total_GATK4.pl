@@ -1,4 +1,4 @@
-#! /usr/bin/perl -w
+#!/usr/bin/perl -w
 
 
 
@@ -31,6 +31,21 @@ use Pod::Usage;
 
 
 my $cutadapt_path = "/nfs/work/agap_id-bin/img/cutadapt/3.1/cutadapt.3.1.img";
+my $fastp_path    = "/nfs/work/agap_id-bin/img/fastp/0.20.1/fastp.0.20.1.img";
+my $fastqc_path   = "/nfs/work/agap_id-bin/img/FastQC/0.11.7";
+my $java_path     = "/nfs/work/agap_id-bin/img/java/jre1.8.0_31/bin";
+my $bwa_path      = "/nfs/work/agap_id-bin/img/bwa/0.7.17/bwa.0.7.17.img";
+##my $bwa_meme2_path="/nfs/work/agap_id-bin/img/bwa-mem2/2.0" 
+my $gatk3_path = "/nfs/work/agap_id-bin/img/GATK/3.6";
+my $gatk_path = "/nfs/work/agap_id-bin/img/GATK/4.2.0.0";
+my $picard_path_2_24 = "/home/bretonc/work_agap_id-bin/img/picard-tools/2.24.0/picard-tools.2.24.0.img";
+my $picard_path_2_72 = "/home/bretonc/work_agap_id-bin/img/picard/2.7.2";
+
+my $samtools_path = "/nfs/work/agap_id-bin/img/samtools/1.2/samtools.1.2.img";
+my $sambamba_path = "/nfs/work/agap_id-bin/img/sambamba/0.8.0/sambamba.0.8.0.img";
+
+
+
 ############### MAIN ##############
 
 print "Job starting\n";
@@ -125,46 +140,175 @@ print ("$filenm_root\n");
 
 #=================================================================================================================================
 
-
+print "#----------------------------------------------------------------#\n";
+print "Check homogenieity of fastq files forward and reverse : Cutadapt ok avec cutadapt  \n";
+print "#----------------------------------------------------------------#\n";
 
 #Check homogenieity of fastq files forward and reverse : Cutadapt
 
 
+#Check homogenieity (Cutadapt)
+if (!-e "$directory/$forward_without_ext.cutadapt.fastq" && "$directory/$reverse_without_ext.cutadapt.fastq")
+{
+        #my $cutadapt_cmd = "module load cutadapt/3.1;cutadapt -a AGATCGGAAGAGC -A AGATCGGAAGAGC -O 7 -m 30 -q 20,20 -o $forward_without_ext.cutadapt.fastq -p $reverse_without_ext.cutadapt.fastq $directory/$forward $directory/$reverse";
+        #my $cutadapt_cmd = "cutadapt -a AGATCGGAAGAGC -A AGATCGGAAGAGC -O 7 -m 30 -q 20,20 -o $forward_without_ext.cutadapt.fastq -p $reverse_without_ext.cutadapt.fastq $directory/$forward $directory/$reverse";
+        my $cutadapt_cmd = "singularity exec $cutadapt_path cutadapt -a AGATCGGAAGAGC -A AGATCGGAAGAGC -O 7 -m 30 -q 20,20 -o $forward_without_ext.cutadapt.fastq -p $reverse_without_ext.cutadapt.fastq $directory/$forward $directory/$reverse";
+        #print ("cutadapt -a AGATCGGAAGAGC -O 7 -m 30 -q 20,20 -o $forward_without_ext.cutadapt.fastq -p $reverse_without_ext.cutadapt.fastq $forward $reverse\n");
+        print "$cutadapt_cmd\n"; #+debug
 
-my $cutadapt_cmd = "singularity exec $cutadapt_path cutadapt -a AGATCGGAAGAGC -A AGATCGGAAGAGC -O 7 -m 30 -q 20,20 -o $forward_without_ext.cutadapt.fastq -p $reverse_without_ext.cutadapt.fastq $directory/$forward $directory/$reverse";
-#print ("cutadapt -a AGATCGGAAGAGC -O 7 -m 30 -q 20,20 -o $forward_without_ext.cutadapt.fastq -p $reverse_without_ext.cutadapt.fastq $forward $reverse\n");
-print "$cutadapt_cmd\n"; #+debug
-
-if (system("$cutadapt_cmd"))
-         {
+        #if (system("$cutadapt_cmd"))#
+        #{
                 # system() returned an error code, execution failed.
-                warn "Failed to execute: $!\n";
-         } 
+               # warn "Failed to execute: $!\n";
+        #} 
+}
+else
+{
+    print("$directory/$forward_without_ext.cutadapt.fastq and $directory/$reverse_without_ext.cutadapt.fastq exists! the file will not be overwritten : skip combine step \n\n");
+}
 
 
-#foreach my $file ( ("$forward_without_ext.cutadapt.fastq", "$reverse_without_ext.cutadapt.fastq") ) {
 
-	#fastqc
-        #my $fastqc = "$fastqc_path/fastqc -j $java_path/java $file";
-        #print ("fastqc on $file (two of two)\n");
-        #system("$fastqc");
-#}
+
+print "#----------------------------------------------------------------#\n";
+print "Check homogenieity of fastq files forward and reverse : fastp OK  avec singularity    \n";
+print "#----------------------------------------------------------------#\n";
+
+
+if (!-e "$directory/$forward_without_ext.fastp.fastq.gz" && "$directory/$reverse_without_ext.fastp.fastq.gz")
+{
+        my $fastp_cmd = "singularity exec $fastp_path fastp --detect_adapter_for_pe"
+        #my $fastp_cmd = "fastp --detect_adapter_for_pe"
+                . ' ' . "--overrepresentation_analysis"
+                . ' ' . "--correction --cut_right --thread 2"
+                . ' ' . "--html $directory/anc.fastp.html --json $directory/anc.fastp.json"
+                . ' ' . "-i $directory/$forward -I $directory/$reverse"
+                . ' ' . "-o $directory/$forward_without_ext.fastp.fastq.gz -O $directory/$reverse_without_ext.fastp.fastq.gz"
+                . ' ' . "\n"; 
+        print "$fastp_cmd\n"; #+debug
+        #if (system("$fastp_cmd"))#
+                # {
+                        # system() returned an error code, execution failed.
+        #               warn "Failed to execute: $!\n";
+                # } 
+}
+else
+{
+    print("$directory/$forward_without_ext.fastp.fastq.gz and $directory/$reverse_without_ext.fastp.fastq.gz exists! the file will not be overwritten : skip combine step \n\n");
+}
+
+
+print "#----------------------------------------------------------------#\n";
+print "Check homogenieity of fastq files forward and reverse : fastqc  ok module   \n";
+print "#----------------------------------------------------------------#\n";
+
+if (!-e "$directory/$forward_without_ext.cutadapt.fastq" && "$directory/$reverse_without_ext.cutadapt.fastq")
+{
+        foreach my $file ( ("$directory/$forward_without_ext.cutadapt.fastq", "$directory/$reverse_without_ext.cutadapt.fastq") ) {
+	        #fastqc
+                my $fastqc_cmd = "fastqc -j java $file";
+                #my $fastqc_cmd = "$fastqc_path/fastqc -j $java_path/java $file";
+                print ("fastqc on $file (two of two)\n");
+
+                #if (system("$fastqc_cmd"))#
+                # {
+                        # system() returned an error code, execution failed.
+                       # warn "Failed to execute: $!\n";
+                # }     
+        }
+}       
+else
+{
+    print("$directory/$forward_without_ext.cutadapt.fastq and $directory/$reverse_without_ext.cutadapt.fastq exists! the file will not be overwritten : skip combine step \n\n");
+}
+
+
+
+
+
+
+
+
+print "#---------------------------------------------------#\n";
+print "bwa mapping on the reference choosen in argument -r Ok with singularity \n";
+print "#---------------------------------------------------#\n";
 
 # bwa mapping on the reference choosen in argument -r
-#my $bwa_mapping = "$bwa_path/bwa mem $reference $forward_without_ext.cutadapt.fastq $reverse_without_ext.cutadapt.fastq > $filenm_root.sam";
+
+if (!-e "$directory/$filenm_root.sam")
+{
+        my $bwa_mapping_cmd = "singularity exec $bwa_path bwa mem $reference $forward_without_ext.cutadapt.fastq $reverse_without_ext.cutadapt.fastq > $filenm_root.sam";
+        #my $bwa_mapping_cmd = "bwa mem $reference $forward_without_ext.cutadapt.fastq $reverse_without_ext.cutadapt.fastq > $filenm_root.sam";
+        print ("Mapping with BWA on file $forward_without_ext.cutadapt.fastq and $reverse_without_ext.cutadapt.fastq...\n");
+        #if (system("$bwa_mapping_cmd"))#
+                # {
+                        # system() returned an error code, execution failed.
+                #        warn "Failed to execute: $!\n";
+               #  }
+}
+else
+{
+    print("$directory/$filenm_root.sam exists! the file will not be overwritten : skip bwa mapping step \n\n");
+}
+
+
+
+# bwa mapping on the reference choosen in argument -r
+#my $bwa_mapping = "$bwa_path/bwa-mem2 mem $reference $forward_without_ext.cutadapt.fastq $reverse_without_ext.cutadapt.fastq > $filenm_root.sam";
 #print ("Mapping with BWA on file $forward_without_ext.cutadapt.fastq and $reverse_without_ext.cutadapt.fastq...\n");
 #system("$bwa_mapping");
 
+
+print "#---------------------------------------------------------#\n";
+print "Add read group, and sort bam , with the tools picardtools ok java jar  \n";
+print "#---------------------------------------------------------#\n";
+
+
 #Add read group, and sort bam , with the tools picardtools
-#my $condition = $filenm_root;
-#my $add_rg = "$java_path/java -Xmx1g -jar $picard_path/picard.jar AddOrReplaceReadGroups I=$filenm_root.sam O=$filenm_root.RG.sorted.bam SO=coordinate RGLB=$cultivar RGPL=illumina RGPU=run RGSM=$condition RGID=$condition";
-#print ("Adding Read Group and sorting on file $filenm_root.sam...\n");
-#system("$add_rg");
+my $condition = $filenm_root;
+
+if (!-e "$directory/$filenm_root.RG.sorted.bam")
+{
+        #my $add_rg_cmd = "singularity exec $picard_path_2_24 picard AddOrReplaceReadGroups I=$filenm_root.sam O=$filenm_root.RG.sorted.bam SO=coordinate RGLB=$cultivar RGPL=illumina RGPU=run RGSM=$condition RGID=$condition";
+        my $add_rg_cmd = "java -Xmx1g -jar $picard_path_2_72/picard.jar AddOrReplaceReadGroups I=$filenm_root.sam O=$filenm_root.RG.sorted.bam SO=coordinate RGLB=$cultivar RGPL=illumina RGPU=run RGSM=$condition RGID=$condition";
+
+                print ("Adding Read Group and sorting on file $filenm_root.sam...\n");
+        #if (system("$add_rg_cmd"))#
+               #  {
+                        # system() returned an error code, execution failed.
+               #        warn "Failed to execute: $!\n";
+               #  }
+}
+else
+{
+    print("$directory/$filenm_root.RG.sorted.bam exists! the file will not be overwritten : skip Add read group step \n\n");
+}
+
+
+
+
+print "#---------------------------------------------------------#\n";
+print "Index bam, with the tools samtools       ok avec singularity               \n";
+print "#---------------------------------------------------------#\n";
+
 
 #Index bam, with the tools picardtools
-#my $index_bam = "$samtools_path/samtools index $filenm_root.RG.sorted.bam";
-#print ("Indexing on bam file $filenm_root.RG.sorted.bam...\n");
-#system("$index_bam");
+if (!-e "$directory/$filenm_root.RG.sorted.bai")
+{
+        my $index_bam_cmd = "singularity exec $samtools_path samtools index $filenm_root.RG.sorted.bam";
+        #my $index_bam_cmd = "samtools index $filenm_root.RG.sorted.bam";
+        print ("Indexing on bam file $filenm_root.RG.sorted.bam...\n");
+        #if (system("$index_bam_cmd"))#
+                # {
+                        # system() returned an error code, execution failed.
+                #       warn "Failed to execute: $!\n";
+                # }
+}
+else
+{
+    print("$directory/$filenm_root.RG.sorted.bai exists! the file will not be overwritten : skip bwa mapping step \n\n");
+}
+
 
 #SplitNCigarReads with GATK4 ######## add -U ALLOW_N_CIGAR_READS in case... becarefull not in GATK4
 ####my $split_and_trim = "$gatk_path/gatk --java-options -Xmx4G SplitNCigarReads -R $reference -I $filenm_root.RG.sorted.bam -rf ReassignOneMappingQuality -RMQF 255 -RMQT 60 -U ALLOW_N_CIGAR_READS -O $filenm_root.Split.bam";
@@ -174,19 +318,56 @@ if (system("$cutadapt_cmd"))
 
 #=================================================================================================================================
 
+print "#---------------------------------------------------------#\n";
+print "Indel Realignement with gatk 3  \n";
+print "#---------------------------------------------------------#\n";
+
+
+
+
 ##### Indel Realignement, 
 # This step is not present in GATK4, not necessary to do for SNP calling but for Indel , need to do so this step is done with GATK3
 
+#RealignerTargetCreator ######Add --fix_misencoded_quality_scores option if needed --fix_misencoded_quality_scores 
+if (!-e "$directory/$filenm_root.forIndelRealigner.intervals")
+{    
+        #my $realigner_target_cmd = "$java_path/java -Xmx1G -jar $gatk3_path/GenomeAnalysisTK.jar -T RealignerTargetCreator -R $reference -I $filenm_root.RG.sorted.bam -o $filenm_root.forIndelRealigner.intervals";
+        my $realigner_target_cmd = "java -Xmx1g -jar $gatk3_path/GenomeAnalysisTK.jar -T RealignerTargetCreator --fix_misencoded_quality_scores -R $reference -I $filenm_root.RG.sorted.bam -o $filenm_root.forIndelRealigner.intervals";
+        print ("Create RealignTargetCreator intervals with $filenm_root.Split.bam...\n");
+        #if (system("$realigner_target_cmd"))#
+                # {
+                        # system() returned an error code, execution failed.
+                #        warn "Failed to execute: $!\n";
+                # }
+}
+else
+{
+    print("$directory/$filenm_root.forIndelRealigner.intervals exists! the file will not be overwritten : skip bwa mapping step \n\n");
+}
+
+
 
 #RealignerTargetCreator ######Add --fix_misencoded_quality_scores option if needed --fix_misencoded_quality_scores 
-#my $realigner_target = "$java_path/java -Xmx1G -jar $gatk3_path/GenomeAnalysisTK.jar -T RealignerTargetCreator -R $reference -I $filenm_root.RG.sorted.bam -o $filenm_root.forIndelRealigner.intervals";
-#print ("Create RealignTargetCreator intervals with $filenm_root.Split.bam...\n");
-#system("$realigner_target");
+#my $realigner_target_cmd = "$java_path/java -Xmx1G -jar $gatk3_path/GenomeAnalysisTK.jar -T RealignerTargetCreator -R $reference -I $filenm_root.RG.sorted.bam -o $filenm_root.forIndelRealigner.intervals";
+my $realigner_target_cmd = "java -Xmx1g -jar $gatk3_path/GenomeAnalysisTK.jar -T RealignerTargetCreator --fix_misencoded_quality_scores -R $reference -I $filenm_root.RG.sorted.bam -o $filenm_root.forIndelRealigner.intervals";
+print ("Create RealignTargetCreator intervals with $filenm_root.Split.bam...\n");
+#if (system("$realigner_target_cmd"))#
+        # {
+                # system() returned an error code, execution failed.
+        #        warn "Failed to execute: $!\n";
+        # }
+
 
 #IndelRealigner ######Add --fix_misencoded_quality_scores option if needed
-#my $indelrealigner = "$java_path/java -Xmx1G -jar $gatk3_path/GenomeAnalysisTK.jar -T IndelRealigner -R $reference -I $filenm_root.RG.sorted.bam -targetIntervals $filenm_root.forIndelRealigner.intervals -o $filenm_root.indelrealigned.RG.sorted.bam";
-#print ("IndelRealigning on file $filenm_root.Split.bamq...\n");
-#system("$indelrealigner");
+my $indelrealigner_cmd = "java -Xmx1G -jar $gatk3_path/GenomeAnalysisTK.jar -T IndelRealigner --fix_misencoded_quality_scores -R $reference -I $filenm_root.RG.sorted.bam -targetIntervals $filenm_root.forIndelRealigner.intervals -o $filenm_root.indelrealigned.RG.sorted.bam";
+#my $indelrealigner_cmd = "$java_path/java -Xmx1G -jar $gatk3_path/GenomeAnalysisTK.jar -T IndelRealigner -R $reference -I $filenm_root.RG.sorted.bam -targetIntervals $filenm_root.forIndelRealigner.intervals -o $filenm_root.indelrealigned.RG.sorted.bam";
+print ("IndelRealigning on file $filenm_root.Split.bamq...\n");
+#if (system("$indelrealigner_cmd"))#
+        # {
+                # system() returned an error code, execution failed.
+        #        warn "Failed to execute: $!\n";
+        # }
+
 
 
 #=================================================================================================================================
@@ -199,36 +380,65 @@ if (system("$cutadapt_cmd"))
 #=================================================================================================================================
 
 
+print "#---------------------------------------------------------#\n";
+print "HaplotypeCaller GATK4                                      \n";
+print "#---------------------------------------------------------#\n";
+
+
 #HaplotypeCaller GATK4 (pour BaseRecalibrator)
-#my $haplotype_caller = "$gatk_path/gatk --java-options -Xmx1G HaplotypeCaller -R $reference -I $filenm_root.indelrealigned.RG.sorted.bam -ploidy 2 -O $filenm_root.indelrealigned.RG.sorted.HC.vcf";
-#print ("Call SNPs with HaplotypeCaller on file $filenm_root.indelrealigned.RG.sorted.bam...\n");
-#system("$haplotype_caller");
+my $haplotype_caller_cmd = "$gatk_path/gatk --java-options -Xmx1G HaplotypeCaller -R $reference -I $filenm_root.indelrealigned.RG.sorted.bam -ploidy 2 -O $filenm_root.indelrealigned.RG.sorted.HC.vcf";
+print ("Call SNPs with HaplotypeCaller on file $filenm_root.indelrealigned.RG.sorted.bam...\n");
+#if (system("$haplotype_caller_cmd"))#
+        # {
+                # system() returned an error code, execution failed.
+        #        warn "Failed to execute: $!\n";
+        # }
 
 
 #VariantAnnotator (add annotation: MappingQualityZero)
-#my $variant_annotation_First = "$gatk_path/gatk --java-options -Xmx1G VariantAnnotator -R $reference -V $filenm_root.indelrealigned.RG.sorted.HC.vcf -I $filenm_root.indelrealigned.RG.sorted.bam -A MappingQualityZero -O $filenm_root.indelrealigned.RG.sorted.HC.ann.vcf";
-#print ("Adding MappingQualityZero annotation in file $filenm_root.indelrealigned.RG.sorted.HC.vcf...\n");
-#system("$variant_annotation_First");
+my $variant_annotation_First_cmd = "$gatk_path/gatk --java-options -Xmx1G VariantAnnotator -R $reference -V $filenm_root.indelrealigned.RG.sorted.HC.vcf -I $filenm_root.indelrealigned.RG.sorted.bam -A MappingQualityZero -O $filenm_root.indelrealigned.RG.sorted.HC.ann.vcf";
+print ("Adding MappingQualityZero annotation in file $filenm_root.indelrealigned.RG.sorted.HC.vcf...\n");
+if (system("$variant_annotation_First_cmd"))#
+        {
+                # system() returned an error code, execution failed.
+                warn "Failed to execute: $!\n";
+        }
 
 #VariantFiltration (Filter SNPs before applying BaseRecalibrator)
-#my $variant_filtration_First  = "$gatk_path/gatk --java-options -Xmx1G VariantFiltration -R $reference -V $filenm_root.indelrealigned.RG.sorted.HC.ann.vcf --cluster-size 3 --cluster-window-size 10 --filter-expression 'MQ0 >= 4 && ((MQ0 / (1.0 * DP)) > 0.1)' --filter-expression 'QD < 1.5' --filter-expression 'DP < 15' --mask-extension 0 --filter-name HARD_TO_VALIDATE --filter-name QD_FILTER --filter-name DP_FILTER --mask-name Mask -O $filenm_root.indelrealigned.RG.sorted.HC.ann.VF.vcf";
-#print ("Variant filtration --filterExpression 'MQ0 >= 4 && ((MQ0 / (1.0 * DP)) > 0.1)' --filterExpression 'QD < 1.5' --filterExpression 'DP < 15' on $filenm_root.indelrealigned.RG.sorted.HC.ann.vcf...\n");
-#system("$variant_filtration_First");
+my $variant_filtration_First_cmd  = "$gatk_path/gatk --java-options -Xmx1G VariantFiltration -R $reference -V $filenm_root.indelrealigned.RG.sorted.HC.ann.vcf --cluster-size 3 --cluster-window-size 10 --filter-expression 'MQ0 >= 4 && ((MQ0 / (1.0 * DP)) > 0.1)' --filter-expression 'QD < 1.5' --filter-expression 'DP < 15' --mask-extension 0 --filter-name HARD_TO_VALIDATE --filter-name QD_FILTER --filter-name DP_FILTER --mask-name Mask -O $filenm_root.indelrealigned.RG.sorted.HC.ann.VF.vcf";
+print ("Variant filtration --filterExpression 'MQ0 >= 4 && ((MQ0 / (1.0 * DP)) > 0.1)' --filterExpression 'QD < 1.5' --filterExpression 'DP < 15' on $filenm_root.indelrealigned.RG.sorted.HC.ann.vcf...\n");
+if (system("$variant_filtration_First_cmd"))#
+        {
+                # system() returned an error code, execution failed.
+               warn "Failed to execute: $!\n";
+        }
 
 #SelectVariant to filter out filtered variants
-#my $select_variant_First = "$gatk_path/gatk --java-options -Xmx1G SelectVariants -R $reference -V $filenm_root.indelrealigned.RG.sorted.HC.ann.VF.vcf -select 'vc.isNotFiltered()' -select-type SNP -O $filenm_root.indelrealigned.RG.sorted.HC.ann.VF.filtered.vcf";
-#print ("Filter out filtered SNPs with SelectVariants -select 'vc.isNotFiltered()' -selectType SNP on file $filenm_root.indelrealigned.RG.sorted.HC.ann.VF.vcf...\n");
-#system("$select_variant_First");
+my $select_variant_First_cmd = "$gatk_path/gatk --java-options -Xmx1G SelectVariants -R $reference -V $filenm_root.indelrealigned.RG.sorted.HC.ann.VF.vcf -select 'vc.isNotFiltered()' -select-type SNP -O $filenm_root.indelrealigned.RG.sorted.HC.ann.VF.filtered.vcf";
+print ("Filter out filtered SNPs with SelectVariants -select 'vc.isNotFiltered()' -selectType SNP on file $filenm_root.indelrealigned.RG.sorted.HC.ann.VF.vcf...\n");
+if (system("$select_variant_First_cmd"))#
+        {
+                # system() returned an error code, execution failed.
+                warn "Failed to execute: $!\n";
+        }
 
 #BaseRecalibrator
-#my $base_recalibrator = "$gatk_path/gatk --java-options -Xmx1G BaseRecalibrator -R $reference -I $filenm_root.indelrealigned.RG.sorted.bam --known-sites $filenm_root.indelrealigned.RG.sorted.HC.ann.VF.filtered.vcf -O $filenm_root.recal_data.table";
-#print ("Create a recalibration table file with BaseRecalibrator with knownSites in file $filenm_root.indelrealigned.RG.sorted.HC.ann.VF.filtered.vcf with BAM file $filenm_root.indelrealigned.RG.sorted.bam...\n");
-#system("$base_recalibrator");
+my $base_recalibrator_cmd = "$gatk_path/gatk --java-options -Xmx1G BaseRecalibrator -R $reference -I $filenm_root.indelrealigned.RG.sorted.bam --known-sites $filenm_root.indelrealigned.RG.sorted.HC.ann.VF.filtered.vcf -O $filenm_root.recal_data.table";
+print ("Create a recalibration table file with BaseRecalibrator with knownSites in file $filenm_root.indelrealigned.RG.sorted.HC.ann.VF.filtered.vcf with BAM file $filenm_root.indelrealigned.RG.sorted.bam...\n");
+if (system("$base_recalibrator_cmd"))#
+        {
+                # system() returned an error code, execution failed.
+                warn "Failed to execute: $!\n";
+        }
 
 #Apply recalibration with ApplyBQSR (exPrintreads)
-#my $apply_recalibration = "$gatk_path/gatk --java-options -Xmx1G ApplyBQSR -R $reference -I $filenm_root.indelrealigned.RG.sorted.bam -bqsr $filenm_root.recal_data.table -O $filenm_root.indelrealigned.RG.sorted.recalibrated.bam";
-#print ("Apply recalibration with PrintReads on file $filenm_root.indelrealigned.RG.sorted.bam...\n");
-#system("$apply_recalibration");
+my $apply_recalibration_cmd = "$gatk_path/gatk --java-options -Xmx1G ApplyBQSR -R $reference -I $filenm_root.indelrealigned.RG.sorted.bam -bqsr $filenm_root.recal_data.table -O $filenm_root.indelrealigned.RG.sorted.recalibrated.bam";
+print ("Apply recalibration with PrintReads on file $filenm_root.indelrealigned.RG.sorted.bam...\n");
+if (system("$apply_recalibration_cmd"))#
+        {
+                # system() returned an error code, execution failed.
+                warn "Failed to execute: $!\n";
+        }
 
 #=================================================================================================================================
 #
@@ -240,9 +450,13 @@ if (system("$cutadapt_cmd"))
 ##### Second HaplotypeCaller on recalibrated Bam.
 #HaplotypeCaller GATK4 
 #Obtain a gVCF with HaplotypeCaller
-#my $haplotype_caller_gvcf = "$gatk_path/gatk --java-options -Xmx4G HaplotypeCaller -R $reference -I $filenm_root.indelrealigned.RG.sorted.recalibrated.bam -ploidy 2 --emit-ref-confidence GVCF -O $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.gvcf";
-#print ("Call SNPs with HaplotypeCaller on file $filenm_root.indelrealigned.RG.sorted.recalibrated.bam and output a gvcf (--emitRefConfidence GVCF)...\n");
-#system("$haplotype_caller_gvcf");
+my $haplotype_caller_gvcf_cmd = "$gatk_path/gatk --java-options -Xmx4G HaplotypeCaller -R $reference -I $filenm_root.indelrealigned.RG.sorted.recalibrated.bam -ploidy 2 --emit-ref-confidence GVCF -O $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.gvcf";
+print ("Call SNPs with HaplotypeCaller on file $filenm_root.indelrealigned.RG.sorted.recalibrated.bam and output a gvcf (--emitRefConfidence GVCF)...\n");
+if (system("$haplotype_caller_gvcf_cmd"))#
+        {
+                # system() returned an error code, execution failed.
+                warn "Failed to execute: $!\n";
+        }
 
 
 #=================================================================================================================================
@@ -256,32 +470,57 @@ if (system("$cutadapt_cmd"))
 
 #HaplotypeCaller GATK4 
 #Obtain a VCF with HaplotypeCaller
-#my $haplotype_caller_vcf = "$gatk_path/gatk --java-options -Xmx1G HaplotypeCaller -R $reference -I $filenm_root.indelrealigned.RG.sorted.recalibrated.bam -ploidy 2 -O $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.vcf";
+#my $haplotype_caller_vcf_cmd = "$gatk_path/gatk --java-options -Xmx1G HaplotypeCaller -R $reference -I $filenm_root.indelrealigned.RG.sorted.recalibrated.bam -ploidy 2 -O $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.vcf";
 #print ("Call SNPs with HaplotypeCaller on file $filenm_root.indelrealigned.RG.sorted.recalibrated.bam ...\n");
-#system("$haplotype_caller_vcf");
+#if (system("$haplotype_caller_vcf_cmd"))#
+  #       {
+                # system() returned an error code, execution failed.
+    #            warn "Failed to execute: $!\n";
+  #       }
+
 
 
 #========================
 #VariantAnnotator GATK4 BETA (add annotation: MappingQualityZero)
-#my $variant_annotation_Second = "$gatk_path/gatk --java-options -Xmx1G VariantAnnotator -R $reference -V $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.vcf -I $filenm_root.indelrealigned.RG.sorted.recalibrated.bam -A MappingQualityZero -O $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.ann.vcf";
+#my $variant_annotation_Second_cmd = "$gatk_path/gatk --java-options -Xmx1G VariantAnnotator -R $reference -V $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.vcf -I $filenm_root.indelrealigned.RG.sorted.recalibrated.bam -A MappingQualityZero -O $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.ann.vcf";
 #print ("Adding MappingQualityZero annotation in file $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.vcf...\n");
-#system("$variant_annotation_Second");
+#if (system("$variant_annotation_Second_cmd"))#
+  #       {
+                # system() returned an error code, execution failed.
+  #              warn "Failed to execute: $!\n";
+  ##       }
+
 
 #VariantAnnotator GATK3 (add annotation: MappingQualityZero)
-#my $variant_annotation = "$java_path/java -Xmx1G -jar $gatk3_path/GenomeAnalysisTK.jar -T VariantAnnotator -R $reference -V $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.vcf -I $filenm_root.indelrealigned.RG.sorted.recalibrated.bam -A MappingQualityZero -o $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.ann.vcf";
+#my $variant_annotation_cmd = "$java_path/java -Xmx1G -jar $gatk3_path/GenomeAnalysisTK.jar -T VariantAnnotator -R $reference -V $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.vcf -I $filenm_root.indelrealigned.RG.sorted.recalibrated.bam -A MappingQualityZero -o $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.ann.vcf";
 #print ("Adding MappingQualityZero annotation in file $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.vcf...\n");
-#system("$variant_annotation");
+#if (system("$variant_annotation_cmd"))#
+    #     {
+                # system() returned an error code, execution failed.
+     #           warn "Failed to execute: $!\n";
+    #     }
+
 #========================
 
 #VariantFiltration (Filter SNPs before applying BaseRecalibrator)
-#my $variant_filtration_Second  = "$gatk_path/gatk --java-options -Xmx1G VariantFiltration -R $reference -V $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.ann.vcf --cluster-size 3 --cluster-window-size 10 --filter-expression 'MQ0 >= 4 && ((MQ0 / (1.0 * DP)) > 0.1)' --filter-expression 'QD < 1.5' --filter-expression 'DP < 15' --mask-extension 0 --filter-name HARD_TO_VALIDATE --filter-name QD_FILTER --filter-name DP_FILTER --mask-name Mask -O $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.ann.VF.vcf";
+#my $variant_filtration_Second_cmd  = "$gatk_path/gatk --java-options -Xmx1G VariantFiltration -R $reference -V $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.ann.vcf --cluster-size 3 --cluster-window-size 10 --filter-expression 'MQ0 >= 4 && ((MQ0 / (1.0 * DP)) > 0.1)' --filter-expression 'QD < 1.5' --filter-expression 'DP < 15' --mask-extension 0 --filter-name HARD_TO_VALIDATE --filter-name QD_FILTER --filter-name DP_FILTER --mask-name Mask -O $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.ann.VF.vcf";
 #print ("Variant filtration --filter-expression 'MQ0 >= 4 && ((MQ0 / (1.0 * DP)) > 0.1)' --filter-expression 'QD < 1.5' --filter-expression 'DP < 15' on $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.ann.vcf...\n");
-#system("$variant_filtration_Second");
+#if (system("$variant_filtration_Second_cmd"))#
+  #       {
+                # system() returned an error code, execution failed.
+    #            warn "Failed to execute: $!\n";
+   #      }
+
 
 #SelectVariant to filter out filtered variants
-#my $select_variant_Second = "$gatk_path/gatk --java-options -Xmx1G SelectVariants -R $reference -V $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.ann.VF.vcf -select 'vc.isNotFiltered()' -select-type SNP -O $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.ann.VF.filtered.vcf";
+#my $select_variant_Second_cmd = "$gatk_path/gatk --java-options -Xmx1G SelectVariants -R $reference -V $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.ann.VF.vcf -select 'vc.isNotFiltered()' -select-type SNP -O $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.ann.VF.filtered.vcf";
 #print ("Filter out filtered SNPs with SelectVariants -select 'vc.isNotFiltered()' -select-type SNP on file $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.ann.VF.vcf...\n");
-#system("$select_variant_Second");
+#if (system("$select_variant_Second_cmd"))#
+  #       {
+                # system() returned an error code, execution failed.
+   #             warn "Failed to execute: $!\n";
+  #       }
+
 
 #=================================================================================================================================
 
