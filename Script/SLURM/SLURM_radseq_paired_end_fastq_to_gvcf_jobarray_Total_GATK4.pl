@@ -80,7 +80,7 @@ foreach (sort keys %ENV) {
 
 
 #List of all file in directory with specific extension
-opendir(CWD,".") or die("Cannot open current directory\n");  
+opendir(CWD,"$directory") or die("Cannot open current directory\n");  
 my @files = grep { m/\.$extension$/ } readdir(CWD);
 closedir(CWD);
 
@@ -129,6 +129,7 @@ my $filenm_root = fileparse($forward, qr/_\d\.$extension$/);
 print ("$filenm_root\n");
 
 
+ 
 
 #========================================================================================================================================================
 
@@ -186,11 +187,11 @@ if (!-e "$directory/$forward_without_ext.fastp.fastq.gz" && "$directory/$reverse
                 . ' ' . "-o $directory/$forward_without_ext.fastp.fastq.gz -O $directory/$reverse_without_ext.fastp.fastq.gz"
                 . ' ' . "\n"; 
         print "$fastp_cmd\n"; #+debug
-        if (system("$fastp_cmd"))#
-                {
+        #if (system("$fastp_cmd"))#
+                #{
                         # system() returned an error code, execution failed.
-                       warn "Failed to execute: $!\n";
-                } 
+                #       warn "Failed to execute: $!\n";
+                #} 
 }
 else
 {
@@ -202,12 +203,12 @@ print "#------------------------------------------------------------------------
 print "Check homogenieity of fastq files forward and reverse : fastqc  ok module   \n";
 print "#--------------------------------------------------------------------------#\n";
 
-if (!-e "$directory/$forward_without_ext.cutadapt.fastq" && "$directory/$reverse_without_ext.cutadapt.fastq")
+if (!-e "$directory/$forward_without_ext.cutadapt_fastq.html" && "$directory/$reverse_without_ext.cutadapt_fastq.html")
 {
         foreach my $file ( ("$directory/$forward_without_ext.cutadapt.fastq", "$directory/$reverse_without_ext.cutadapt.fastq") ) {
 	        #fastqc
                 my $fastqc_cmd = "fastqc -j java $file";
-                #my $fastqc_cmd = "$fastqc_path/fastqc -j $java_path/java $file";
+                #my $fastqc_cmd = "$fastqc_path/fastqc -j java $file";
                 print ("fastqc on $file (two of two)\n");
                 if (system("$fastqc_cmd"))#
                 {
@@ -218,7 +219,7 @@ if (!-e "$directory/$forward_without_ext.cutadapt.fastq" && "$directory/$reverse
 }       
 else
 {
-    print("$directory/$forward_without_ext.cutadapt.fastq and $directory/$reverse_without_ext.cutadapt.fastq exists! the file will not be overwritten : skip combine step \n\n");
+    print("$directory/$forward_without_ext.cutadapt_fastq.html and $directory/$reverse_without_ext.cutadapt_fastq.html exists! the file will not be overwritten : skip combine step \n\n");
 }
 
 
@@ -264,7 +265,7 @@ my $condition = $filenm_root;
 if (!-e "$directory/$filenm_root.RG.sorted.bam")
 {
         #my $add_rg_cmd = "singularity exec $picard_path_2_24 picard AddOrReplaceReadGroups I=$filenm_root.sam O=$filenm_root.RG.sorted.bam SO=coordinate RGLB=$cultivar RGPL=illumina RGPU=run RGSM=$condition RGID=$condition";
-        my $add_rg_cmd = "java -Xmx1g -jar $picard_path_2_72/picard.jar AddOrReplaceReadGroups I=$filenm_root.sam O=$filenm_root.RG.sorted.bam SO=coordinate RGLB=$cultivar RGPL=illumina RGPU=run RGSM=$condition RGID=$condition";
+        my $add_rg_cmd = "java -Xmx2G -jar $picard_path_2_72/picard.jar AddOrReplaceReadGroups I=$filenm_root.sam O=$filenm_root.RG.sorted.bam SO=coordinate RGLB=$cultivar RGPL=illumina RGPU=run RGSM=$condition RGID=$condition";
         print ("Adding Read Group and sorting on file $filenm_root.sam...\n");
         if (system("$add_rg_cmd"))#
                 {
@@ -325,7 +326,7 @@ print "#---------------------------------------------------------#\n";
 if (!-e "$directory/$filenm_root.forIndelRealigner.intervals")
 {    
         #my $realigner_target_cmd = "$java_path/java -Xmx1G -jar $gatk3_path/GenomeAnalysisTK.jar -T RealignerTargetCreator -R $reference -I $filenm_root.RG.sorted.bam -o $filenm_root.forIndelRealigner.intervals";
-        my $realigner_target_cmd = "java -Xmx1g -jar $gatk3_path/GenomeAnalysisTK.jar -T RealignerTargetCreator --fix_misencoded_quality_scores -R $reference -I $filenm_root.RG.sorted.bam -o $filenm_root.forIndelRealigner.intervals";
+        my $realigner_target_cmd = "java -Xmx2G -jar $gatk3_path/GenomeAnalysisTK.jar -T RealignerTargetCreator -R $reference -I $filenm_root.RG.sorted.bam -o $filenm_root.forIndelRealigner.intervals";
         print ("Create RealignTargetCreator intervals with $filenm_root.Split.bam...\n");
         if (system("$realigner_target_cmd"))#
                 {
@@ -343,7 +344,7 @@ else
 #IndelRealigner ######Add --fix_misencoded_quality_scores option if needed
 if (!-e "$directory/$filenm_root.indelrealigned.RG.sorted.bam")
 {    
-        my $indelrealigner_cmd = "java -Xmx1G -jar $gatk3_path/GenomeAnalysisTK.jar -T IndelRealigner --fix_misencoded_quality_scores -R $reference -I $filenm_root.RG.sorted.bam -targetIntervals $filenm_root.forIndelRealigner.intervals -o $filenm_root.indelrealigned.RG.sorted.bam";
+        my $indelrealigner_cmd = "java -Xmx2G -jar $gatk3_path/GenomeAnalysisTK.jar -T IndelRealigner -R $reference -I $filenm_root.RG.sorted.bam -targetIntervals $filenm_root.forIndelRealigner.intervals -o $filenm_root.indelrealigned.RG.sorted.bam";
         #my $indelrealigner_cmd = "$java_path/java -Xmx1G -jar $gatk3_path/GenomeAnalysisTK.jar -T IndelRealigner -R $reference -I $filenm_root.RG.sorted.bam -targetIntervals $filenm_root.forIndelRealigner.intervals -o $filenm_root.indelrealigned.RG.sorted.bam";
         print ("IndelRealigning on file $filenm_root.Split.bamq...\n");
         if (system("$indelrealigner_cmd"))#
@@ -375,7 +376,7 @@ print "#---------------------------------------------------------#\n";
 #HaplotypeCaller GATK4 (pour BaseRecalibrator)
 if (!-e "$directory/$filenm_root.indelrealigned.RG.sorted.HC.vcf")
 {    
-        my $haplotype_caller_cmd = "$gatk_path/gatk --java-options -Xmx1G HaplotypeCaller -R $reference -I $filenm_root.indelrealigned.RG.sorted.bam -ploidy 2 -O $filenm_root.indelrealigned.RG.sorted.HC.vcf";
+        my $haplotype_caller_cmd = "$gatk_path/gatk --java-options -Xmx2G HaplotypeCaller -R $reference -I $filenm_root.indelrealigned.RG.sorted.bam -ploidy 2 -O $filenm_root.indelrealigned.RG.sorted.HC.vcf";
         print ("Call SNPs with HaplotypeCaller on file $filenm_root.indelrealigned.RG.sorted.bam...\n");
         if (system("$haplotype_caller_cmd"))#
                 {
@@ -396,7 +397,7 @@ print "#---------------------------------------------------------#\n";
 #VariantAnnotator (add annotation: MappingQualityZero)
 if (!-e "$directory/$filenm_root.indelrealigned.RG.sorted.HC.ann.vcf")
 {    
-        my $variant_annotation_First_cmd = "$gatk_path/gatk --java-options -Xmx1G VariantAnnotator -R $reference -V $filenm_root.indelrealigned.RG.sorted.HC.vcf -I $filenm_root.indelrealigned.RG.sorted.bam -A MappingQualityZero -O $filenm_root.indelrealigned.RG.sorted.HC.ann.vcf";
+        my $variant_annotation_First_cmd = "$gatk_path/gatk --java-options -Xmx2G VariantAnnotator -R $reference -V $filenm_root.indelrealigned.RG.sorted.HC.vcf -I $filenm_root.indelrealigned.RG.sorted.bam -A MappingQualityZero -O $filenm_root.indelrealigned.RG.sorted.HC.ann.vcf";
         print ("Adding MappingQualityZero annotation in file $filenm_root.indelrealigned.RG.sorted.HC.vcf...\n");
         if (system("$variant_annotation_First_cmd"))#
                 {
@@ -418,7 +419,7 @@ print "#---------------------------------------------------------#\n";
 #VariantFiltration (Filter SNPs before applying BaseRecalibrator)
 if (!-e "$directory/$filenm_root.indelrealigned.RG.sorted.HC.ann.VF.vcf")
 {    
-        my $variant_filtration_First_cmd  = "$gatk_path/gatk --java-options -Xmx1G VariantFiltration -R $reference -V $filenm_root.indelrealigned.RG.sorted.HC.ann.vcf --cluster-size 3 --cluster-window-size 10 --filter-expression 'MQ0 >= 4 && ((MQ0 / (1.0 * DP)) > 0.1)' --filter-expression 'QD < 1.5' --filter-expression 'DP < 15' --mask-extension 0 --filter-name HARD_TO_VALIDATE --filter-name QD_FILTER --filter-name DP_FILTER --mask-name Mask -O $filenm_root.indelrealigned.RG.sorted.HC.ann.VF.vcf";
+        my $variant_filtration_First_cmd  = "$gatk_path/gatk --java-options -Xmx2G VariantFiltration -R $reference -V $filenm_root.indelrealigned.RG.sorted.HC.ann.vcf --cluster-size 3 --cluster-window-size 10 --filter-expression 'MQ0 >= 4 && ((MQ0 / (1.0 * DP)) > 0.1)' --filter-expression 'QD < 1.5' --filter-expression 'DP < 15' --mask-extension 0 --filter-name HARD_TO_VALIDATE --filter-name QD_FILTER --filter-name DP_FILTER --mask-name Mask -O $filenm_root.indelrealigned.RG.sorted.HC.ann.VF.vcf";
         print ("Variant filtration --filterExpression 'MQ0 >= 4 && ((MQ0 / (1.0 * DP)) > 0.1)' --filterExpression 'QD < 1.5' --filterExpression 'DP < 15' on $filenm_root.indelrealigned.RG.sorted.HC.ann.vcf...\n");
         if (system("$variant_filtration_First_cmd"))#
                 {
@@ -441,7 +442,7 @@ print "#---------------------------------------------------------#\n";
 #SelectVariant to filter out filtered variants
 if (!-e "$directory/$filenm_root.indelrealigned.RG.sorted.HC.ann.VF.filtered.vcf")
 {    
-        my $select_variant_First_cmd = "$gatk_path/gatk --java-options -Xmx1G SelectVariants -R $reference -V $filenm_root.indelrealigned.RG.sorted.HC.ann.VF.vcf -select 'vc.isNotFiltered()' -select-type SNP -O $filenm_root.indelrealigned.RG.sorted.HC.ann.VF.filtered.vcf";
+        my $select_variant_First_cmd = "$gatk_path/gatk --java-options -Xmx2G SelectVariants -R $reference -V $filenm_root.indelrealigned.RG.sorted.HC.ann.VF.vcf -select 'vc.isNotFiltered()' -select-type SNP -O $filenm_root.indelrealigned.RG.sorted.HC.ann.VF.filtered.vcf";
         print ("Filter out filtered SNPs with SelectVariants -select 'vc.isNotFiltered()' -selectType SNP on file $filenm_root.indelrealigned.RG.sorted.HC.ann.VF.vcf...\n");
         if (system("$select_variant_First_cmd"))#
                 {
@@ -466,7 +467,7 @@ print "#---------------------------------------------------------#\n";
 
 if (!-e "$directory/$filenm_root.recal_data.table")
 {    
-        my $base_recalibrator_cmd = "$gatk_path/gatk --java-options -Xmx1G BaseRecalibrator -R $reference -I $filenm_root.indelrealigned.RG.sorted.bam --known-sites $filenm_root.indelrealigned.RG.sorted.HC.ann.VF.filtered.vcf -O $filenm_root.recal_data.table";
+        my $base_recalibrator_cmd = "$gatk_path/gatk --java-options -Xmx2G BaseRecalibrator -R $reference -I $filenm_root.indelrealigned.RG.sorted.bam --known-sites $filenm_root.indelrealigned.RG.sorted.HC.ann.VF.filtered.vcf -O $filenm_root.recal_data.table";
         print ("Create a recalibration table file with BaseRecalibrator with knownSites in file $filenm_root.indelrealigned.RG.sorted.HC.ann.VF.filtered.vcf with BAM file $filenm_root.indelrealigned.RG.sorted.bam...\n");
         if (system("$base_recalibrator_cmd"))#
                 {
@@ -490,7 +491,7 @@ print "#---------------------------------------------------------#\n";
 
 if (!-e "$directory/$filenm_root.indelrealigned.RG.sorted.recalibrated.bam")
 {    
-        my $apply_recalibration_cmd = "$gatk_path/gatk --java-options -Xmx1G ApplyBQSR -R $reference -I $filenm_root.indelrealigned.RG.sorted.bam -bqsr $filenm_root.recal_data.table -O $filenm_root.indelrealigned.RG.sorted.recalibrated.bam";
+        my $apply_recalibration_cmd = "$gatk_path/gatk --java-options -Xmx2G ApplyBQSR -R $reference -I $filenm_root.indelrealigned.RG.sorted.bam -bqsr $filenm_root.recal_data.table -O $filenm_root.indelrealigned.RG.sorted.recalibrated.bam";
         print ("Apply recalibration with PrintReads on file $filenm_root.indelrealigned.RG.sorted.bam...\n");
         if (system("$apply_recalibration_cmd"))#
                 {
@@ -522,7 +523,7 @@ print "#---------------------------------------------------------#\n";
 
 if (!-e "$directory/$filenm_root.indelrealigned.RG.sorted.recalibrated.HC.gvcf")
 {    
-        my $haplotype_caller_gvcf_cmd = "$gatk_path/gatk --java-options -Xmx4G HaplotypeCaller -R $reference -I $filenm_root.indelrealigned.RG.sorted.recalibrated.bam -ploidy 2 --emit-ref-confidence GVCF -O $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.gvcf";
+        my $haplotype_caller_gvcf_cmd = "$gatk_path/gatk --java-options -Xmx2G HaplotypeCaller -R $reference -I $filenm_root.indelrealigned.RG.sorted.recalibrated.bam -ploidy 2 --emit-ref-confidence GVCF -O $filenm_root.indelrealigned.RG.sorted.recalibrated.HC.gvcf";
         print ("Call SNPs with HaplotypeCaller on file $filenm_root.indelrealigned.RG.sorted.recalibrated.bam and output a gvcf (--emitRefConfidence GVCF)...\n");
         if (system("$haplotype_caller_gvcf_cmd"))#
                 {
