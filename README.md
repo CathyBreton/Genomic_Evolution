@@ -474,6 +474,7 @@ The Alliance of Bioversity International and the International Center for Tropic
 delivers research-based solutions that harness agricultural biodiversity and sustainably transform
 food systems to improve people’s lives in a climate crisis.
 The Alliance is part of CGIAR, a global research partnership for a food-secure future.
+
 https://alliancebioversityciat.org/
 https://www.bioversityinternational.org/       
 https://www.ciat.cgiar.org
