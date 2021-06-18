@@ -4,14 +4,37 @@
 
 
 
-
 ###################
 #
-# Licencied under CeCill-C (http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.html)
+#  Licencied under GNU General Public License : GPL-3.0-or-later 
 #
-# Intellectual property belongs to Bioversity
+#  Intellectual property belongs to Bioversity
 #
-# Written by  Catherine Breton
+#  Written  Catherine Breton
+#
+#  Contact : Catherine Breton c.breton@cgiar.org
+#
+#  Script Name : Dartseq_single_end_fastq_to_bam_Total_GATK4.pl
+#
+#
+#  
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, see <http://www.gnu.org/licenses/> or
+#  write to the Free Software Foundation, Inc.,
+#  51 Franklin Street, Fifth Floor, Boston,
+#  MA 02110-1301, USA.
+#
+#
 #
 # Script Name : SLURM_radseq_paired_end_fastq_to_gvcf_jobarray_Total_GATK4.pl
 #
@@ -71,7 +94,7 @@ GetOptions
 (   "x|extension=s"         => \$extension, 
     "r|reference=s"         => \$reference, 
     "d|directorty=s"        => \$directory,
-    "c|cultivar=s" 			=> \$cultivar
+    "c|cultivar=s" 	    => \$cultivar
 ) or die ("Error in command line arguments\n");
 
 #Variables Environnement
@@ -103,7 +126,6 @@ foreach my $file (sort( {$a cmp $b} @files)) {
 }
 print (Dumper([%hash_file]) . "\n");	
 
-#relative file path 
 
 #relative file path 
 #my $slurm_id = `echo $SLURM_ARRAY_TASK_ID` or die ("Cannot catch SLURM_ARRAY_TASK_ID\n");
@@ -213,11 +235,11 @@ if (!-e "$directory/$forward_without_ext.cutadapt_fastq.html" && "$directory/$re
                 my $fastqc_cmd = "fastqc -j java $file";
                 #my $fastqc_cmd = "$fastqc_path/fastqc -j java $file";
                 print ("fastqc on $file (two of two)\n");
-                #if (system("$fastqc_cmd"))#
-                #{
+                if (system("$fastqc_cmd"))#
+                {
                         # system() returned an error code, execution failed.
-                #        warn "Failed to execute: $!\n";
-                #}     
+                        warn "Failed to execute: $!\n";
+                }     
         }
 }       
 else
@@ -238,23 +260,17 @@ if (!-e "$directory/$filenm_root.sam")
         my $bwa_mapping_cmd = "singularity exec $bwa_path bwa mem $reference $forward_without_ext.cutadapt.fastq $reverse_without_ext.cutadapt.fastq > $filenm_root.sam";
         #my $bwa_mapping_cmd = "bwa mem $reference $forward_without_ext.cutadapt.fastq $reverse_without_ext.cutadapt.fastq > $filenm_root.sam";
         print ("Mapping with BWA on file $forward_without_ext.cutadapt.fastq and $reverse_without_ext.cutadapt.fastq...\n");
-        #if (system("$bwa_mapping_cmd"))#
-        #        {
+        if (system("$bwa_mapping_cmd"))#
+                {
                         # system() returned an error code, execution failed.
-        #                warn "Failed to execute: $!\n";
-        #        }
+                        warn "Failed to execute: $!\n";
+                }
 }
 else
 {
     print("$directory/$filenm_root.sam exists! the file will not be overwritten : skip bwa mapping step \n\n");
 }
 
-
-
-# bwa mapping on the reference choosen in argument -r
-#my $bwa_mapping = "$bwa_path/bwa-mem2 mem $reference $forward_without_ext.cutadapt.fastq $reverse_without_ext.cutadapt.fastq > $filenm_root.sam";
-#print ("Mapping with BWA on file $forward_without_ext.cutadapt.fastq and $reverse_without_ext.cutadapt.fastq...\n");
-#system("$bwa_mapping");
 
 
 print "#---------------------------------------------------------------------#\n";
@@ -270,11 +286,11 @@ if (!-e "$directory/$filenm_root.RG.sorted.bam")
         #my $add_rg_cmd = "singularity exec $picard_path_2_24 picard AddOrReplaceReadGroups I=$filenm_root.sam O=$filenm_root.RG.sorted.bam SO=coordinate RGLB=$cultivar RGPL=illumina RGPU=run RGSM=$condition RGID=$condition";
         my $add_rg_cmd = "java -Xmx2G -jar $picard_path_2_72/picard.jar AddOrReplaceReadGroups I=$filenm_root.sam O=$filenm_root.RG.sorted.bam SO=coordinate RGLB=$cultivar RGPL=illumina RGPU=run RGSM=$condition RGID=$condition";
         print ("Adding Read Group and sorting on file $filenm_root.sam...\n");
-        #if (system("$add_rg_cmd"))#
-        #        {
+        if (system("$add_rg_cmd"))#
+                {
                         # system() returned an error code, execution failed.
-        #               warn "Failed to execute: $!\n";
-        #        }
+                       warn "Failed to execute: $!\n";
+                }
 }
 else
 {
@@ -295,11 +311,11 @@ if (!-e "$directory/$filenm_root.RG.sorted.bai")
         my $index_bam_cmd = "singularity exec $samtools_path samtools index $filenm_root.RG.sorted.bam";
         #my $index_bam_cmd = "samtools index $filenm_root.RG.sorted.bam";
         print ("Indexing on bam file $filenm_root.RG.sorted.bam...\n");
-        #if (system("$index_bam_cmd"))#
-         #       {
+        if (system("$index_bam_cmd"))#
+                {
                         # system() returned an error code, execution failed.
-        #               warn "Failed to execute: $!\n";
-        #        }
+                       warn "Failed to execute: $!\n";
+                }
 }
 else
 {
@@ -331,11 +347,11 @@ if (!-e "$directory/$filenm_root.forIndelRealigner.intervals")
         #my $realigner_target_cmd = "$java_path/java -Xmx1G -jar $gatk3_path/GenomeAnalysisTK.jar -T RealignerTargetCreator -R $reference -I $filenm_root.RG.sorted.bam -o $filenm_root.forIndelRealigner.intervals";
         my $realigner_target_cmd = "java -Xmx2G -jar $gatk3_path/GenomeAnalysisTK.jar -T RealignerTargetCreator -R $reference -I $filenm_root.RG.sorted.bam -o $filenm_root.forIndelRealigner.intervals";
         print ("Create RealignTargetCreator intervals with $filenm_root.Split.bam...\n");
-        #if (system("$realigner_target_cmd"))#
-        #        {
+        if (system("$realigner_target_cmd"))#
+                {
                         # system() returned an error code, execution failed.
-        #                warn "Failed to execute: $!\n";
-        #        }
+                        warn "Failed to execute: $!\n";
+                }
 }
 else
 {
@@ -350,11 +366,11 @@ if (!-e "$directory/$filenm_root.indelrealigned.RG.sorted.bam")
         my $indelrealigner_cmd = "java -Xmx2G -jar $gatk3_path/GenomeAnalysisTK.jar -T IndelRealigner -R $reference -I $filenm_root.RG.sorted.bam -targetIntervals $filenm_root.forIndelRealigner.intervals -o $filenm_root.indelrealigned.RG.sorted.bam";
         #my $indelrealigner_cmd = "$java_path/java -Xmx1G -jar $gatk3_path/GenomeAnalysisTK.jar -T IndelRealigner -R $reference -I $filenm_root.RG.sorted.bam -targetIntervals $filenm_root.forIndelRealigner.intervals -o $filenm_root.indelrealigned.RG.sorted.bam";
         print ("IndelRealigning on file $filenm_root.Split.bamq...\n");
-        #if (system("$indelrealigner_cmd"))#
-        #        {
+        if (system("$indelrealigner_cmd"))#
+                {
                         # system() returned an error code, execution failed.
-        #                warn "Failed to execute: $!\n";
-        #        }        
+                        warn "Failed to execute: $!\n";
+                }        
 }
 else
 {
