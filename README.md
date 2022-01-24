@@ -239,6 +239,10 @@ Website: https://github.com/alexdobin/STAR
 
 ## **Step b** Variant discovery
 
+<div align="justify">
+This step is devided in two main steps, two "SnpCalling". First one with filter parameter stringeant allow to recalibrate the bam file. The second SnpCalling allow to avoid the false positive position.
+</div>
+
 -	Add read group and (accession name from the fq.gz filename) sort BAM with Picard Tools
 
 **Description**: This step replaces the reads Groups which describe the reads mapped on the reference, the sequencing technology, samples names, and library number are added.
