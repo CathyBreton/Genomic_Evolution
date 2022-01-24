@@ -303,6 +303,10 @@ Fixed Parameters:
 --variant_index_parameter 128000
 ```
 
+Website :  https://gatk.broadinstitute.org/hc/en-us/articles/360036712151-HaplotypeCaller
+
+
+
 - Filter VCF file with VariantFiltration from GATK
 
 **Description**: The VariantFiltration is able to filter the variant position acording parameters. Those filter depend of the type of data and the polyploidie.
@@ -314,7 +318,7 @@ Fixed Parameters:
 --filterExpression 'DP < 15' 
 ```
 
-Website :  https://gatk.broadinstitute.org/hc/en-us/articles/360036712151-HaplotypeCaller
+Website :  https://gatk.broadinstitute.org/hc/en-us/articles/360037434691-VariantFiltration
 
 
 **Description**: Get one FASTQ file ready for SNP calling per accession from raw sequence data (fastq.gz files).
