@@ -262,6 +262,7 @@ The tool generates a bam (*_rmdup.bam) files for each accession with the RG (Rea
 - Mark duplicate reads and index BAM with MarkDuplicates from PicardTools
 
 **Description**: PCR duplicate removal, where PCR duplicates arise from multiple PCR products from the same template molecule binding on the flow cell. These are removed because they can lead to false positive variant calls. Sort the BAM file and mark the duplicated reads.
+This step is done on RNAseq, not on DarTseq, GBS or RADseq.
 Website: https://broadinstitute.github.io/picard/
 
 The tool generate a bam (*_rmdup.bam) files for each accession with duplicated reads removed.
@@ -302,6 +303,17 @@ Fixed Parameters:
 --variant_index_parameter 128000
 ```
 
+- Filter VCF file with VariantFiltration from GATK
+
+**Description**: The VariantFiltration is able to filter the variant position acording parameters. Those filter depend of the type of data and the polyploidie.
+
+```
+Fixed Parameters:
+--filterExpression 'MQ0 >= 4 && ((MQ0 / (1.0 * DP)) > 0.1)' 
+--filterExpression 'QD < 1.5' 
+--filterExpression 'DP < 15' 
+```
+
 Website :  https://gatk.broadinstitute.org/hc/en-us/articles/360036712151-HaplotypeCaller
 
 
@@ -317,7 +329,6 @@ Fixed Parameters:
 -x (string): file extension (fq.gz)
 -cu (string): cultivar
 ```
-
 
 
 ## Workflow - Molecular karyotype analysis
