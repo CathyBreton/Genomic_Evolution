@@ -1,8 +1,8 @@
 ![Logo](images/Musa_NGS_Suite.png)
 
-# *Musa_NGS_Replicate_Sample_Suite*
+# *Musa_NGS_Suite_Replicate*
 
-Purpose of Musa_NGS_Replicate_Sample_Suite
+Purpose of Musa_NGS_Suite_Replicate
 ------------------------------------------
 
 <div align="justify">
