@@ -80,7 +80,7 @@ Filling the gaps in gene banks: Collecting, characterizing and phenotyping wild 
   
 If you use the second workflow.
 <div align="justify">
-A protocol for detection of large chromosome variations in banana using Next Generation Sequencing. Breton Catherine, Cenci Alberto, Sardos Julie, Chase Rachel, Ruas Max, Rouard Mathieu & Roux Nicolas Published in October. Under review.
+A protocol for detection of large chromosome variations in banana using Next Generation Sequencing. Breton Catherine, Cenci Alberto, Sardos Julie, Chase Rachel, Ruas Max, Rouard Mathieu & Roux Nicolas Published in March 2022. Accepted at SpringerNature.
 </div>
 
 ## Introduction
