@@ -239,6 +239,18 @@ Reference preparation :
 ```
 Parameter for  STAR Indexe Reference : 
 
+The basic options to generate genome indices using STAR are as follows:
+
+    --runThreadN: number of threads
+    --runMode: genomeGenerate mode
+    --genomeDir: /path/to/store/genome_indices
+    --genomeFastaFiles: /path/to/FASTA_file
+    --sjdbGTFfile: /path/to/GTF_file
+    --sjdbOverhang: readlength -1
+
+
+
+
 STAR 
 --runMode genomeGenerate 
 --runThreadN 1
