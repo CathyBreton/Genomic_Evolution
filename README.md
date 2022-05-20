@@ -233,6 +233,34 @@ Website: http://bio-bwa.sourceforge.net/
 
 **Description**: In the 2-pass mapping job, STAR will map the reads twice. In the 1st pass, the novel junctions will be detected and inserted into the genome indices. In the 2nd pass, all reads will be re-mapped using annotated (from the GTF file) and novel (detected in the 1st pass) junctions. While this procedure doubles the run-time, it significantly increases sensitivity to novel splice junctions. In the absence of annotations, this option is strongly recommended.
 
+Reference preparation : 
+
+
+```
+Parameter for  STAR Indexe Reference : 
+
+STAR 
+--runMode genomeGenerate 
+--runThreadN 1
+--genomeDir Genome_Index_STAR 
+--genomeFastaFiles Reference_assembly.fasta 
+--sjdbGTFfile Reference.gff3
+--sjdbGTFtagExonParentTranscript Parent 
+--sjdbOverhang 100
+
+
+$star_path/STAR
+--genomeDir $genome_indexes_dir 
+--readFilesIn $forward_without_ext.cutadapt.fastq $reverse_without_ext.cutadapt.fastq
+--outSAMunmapped Within
+--outFileNamePrefix $filenm_root
+--outSAMmapqUnique 255 
+--twopassMode Basic 
+--quantMode GeneCounts"
+
+```
+
+
 The tool generates a folder for each accession, (names filled in column 3 "genome_name") filled in the configuration file, which contained the SAM files of aligned reads and a .final.out file of mapping statistics for each library. In addition, a (--prefix) folder containing a mapping statistics file (--prefix + mapping.tab) for all accession is generated.
 
 Website: https://github.com/alexdobin/STAR
