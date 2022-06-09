@@ -70,9 +70,6 @@ In order to adapt those script to SLURM , one script is added, but not finish in
 
 </details>
 
-
-How to cite
------------
 How to cite
 -----------
 <div align="justify">
