@@ -73,15 +73,19 @@ In order to adapt those script to SLURM , one script is added, but not finish in
 
 How to cite
 -----------
+How to cite
+-----------
 <div align="justify">
-Filling the gaps in gene banks: Collecting, characterizing and phenotyping wild banana relatives of Papua new guinea David Eyland, Catherine Breton, Julie Sardos, Simon Kallow, Bart Panis, Rony Swennen, Janet Paofa, François Tardieu, Claude Welcker Steven B. Janssens, Sebastien C. Carpentier. *Crop Science* https://doi.org/10.1002/csc2.20320  
+Filling the gaps in gene banks: Collecting, characterizing and phenotyping wild banana relatives of Papua new guinea (2020) David Eyland, Catherine Breton, Julie Sardos, Simon Kallow, Bart Panis, Rony Swennen, Janet Paofa, François Tardieu, Claude Welcker Steven B. Janssens, Sebastien C. Carpentier. *Crop Science* https://doi.org/10.1002/csc2.20320  
 </div>
-
   
+&nbsp;
+
 If you use the second workflow.
 <div align="justify">
-A protocol for detection of large chromosome variations in banana using Next Generation Sequencing. Breton Catherine, Cenci Alberto, Sardos Julie, Chase Rachel, Ruas Max, Rouard Mathieu & Roux Nicolas Published in March 2022. Accepted at SpringerNature.
+Breton Catherine, Cenci Alberto, Sardos Julie, Chase Rachel, Ruas Max, Rouard Mathieu & Roux Nicolas (2022). A Protocol for Detection of Large Chromosome Variations in Banana Using Next Generation Sequencing. In: Jankowicz-Cieslak, J., Ingelbrecht, I.L. (eds) Efficient Screening Techniques to Identify Mutants with TR4 Resistance in Banana. Springer, Berlin, Heidelberg. https://doi.org/10.1007/978-3-662-64915-2_9
 </div>
+&nbsp;
 
 ## Introduction
 
