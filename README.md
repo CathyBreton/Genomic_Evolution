@@ -84,6 +84,13 @@ Breton Catherine, Cenci Alberto, Sardos Julie, Chase Rachel, Ruas Max, Rouard Ma
 </div>
 &nbsp;
 
+Study using the tools : 
+
+<div align="justify">
+Sardos J, Breton C, Perrier X, Van den Houwe I, Carpentier S, Paofa J, Rouard M and Roux N (2022) Hybridization, missing wild ancestors and the domestication of cultivated diploid bananas. Front. Plant Sci. 13:969220. doi: 10.3389/fpls.2022.969220
+</div>
+&nbsp;
+
 ## Introduction
 
 
