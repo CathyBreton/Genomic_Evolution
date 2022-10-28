@@ -546,6 +546,7 @@ https://alliancebioversityciat.org/
 https://www.bioversityinternational.org/       
 https://www.ciat.cgiar.org
 
+![Alliance](images/Logo_bioversity_Alliance.png)
 
 
 ![Alliance](images/Alliance_logo_wide2.jpg)
